@@ -32,20 +32,35 @@ public class Movement : MonoBehaviour
 
     void ProcessThrust()
     {
-        if(Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space))
         {
-            startThrusting();
+            StartThrusting();
         }
         else
         {
-            stopThrusting();
+            StopThrusting();
+        }
+    }
+
+    void ProcessRotation()
+    {
+        if(Input.GetKey(KeyCode.LeftArrow))
+        {
+            RotateLeft();
+        }
+        else if (Input.GetKey(KeyCode.RightArrow))
+        {
+            RotateRight();
+        }
+        else
+        {
+            StopRotating();
         }
     }
 
 
-    void startThrusting()
+    void StartThrusting()
     {
-         // Debug.Log("Space pressed");
         rb.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
         if(!audioSource.isPlaying)
         {
@@ -57,27 +72,10 @@ public class Movement : MonoBehaviour
         }
     }
 
-    void stopThrusting()
+    void StopThrusting()
     {
         audioSource.Stop();
         mainEngineParticles.Stop();
-    }
-
-    void ProcessRotation()
-    {
-        // Debug.Log("Left Arrow pressed");
-        ApplyRotation(rotationThrust);
-        if(!leftThrusterParticles.isPlaying)
-        {
-            RotateLeft();
-        }
-        else if (Input.GetKey(KeyCode.RightArrow))
-        {
-            RotateRight();
-        }
-        else{
-            StopRotating();
-        }
     }
 
     void RotateLeft()
