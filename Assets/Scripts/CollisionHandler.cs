@@ -6,10 +6,13 @@ using UnityEngine.SceneManagement;
 public class CollisionHandler : MonoBehaviour
 {
     [SerializeField] float timeOfDelay = 1f;
+
     [SerializeField] AudioClip success;
     [SerializeField] AudioClip exploded;
+
     [SerializeField] ParticleSystem successParticles;
     [SerializeField] ParticleSystem explodedParticles;
+
 
 
     AudioSource audioSource;
