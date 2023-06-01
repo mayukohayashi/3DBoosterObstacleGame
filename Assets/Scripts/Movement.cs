@@ -31,66 +31,93 @@ public class Movement : MonoBehaviour
     }
 
     void ProcessThrust()
+    {
+        if(Input.GetKey(KeyCode.Space))
         {
-            if(Input.GetKey(KeyCode.Space))
-            {
-                // Debug.Log("Space pressed");
-                rb.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
-
-                if(!audioSource.isPlaying)
-                {
-                audioSource.PlayOneShot(mainEngine);
-                }
-                if(!mainEngineParticles.isPlaying)
-                {
-                    mainEngineParticles.Play();
-                }
-            }
-            else
-            {
-                audioSource.Stop();
-                mainEngineParticles.Stop();
-            }
+            startThrusting();
         }
-
-        void ProcessRotation()
+        else
         {
-
-            if (Input.GetKey(KeyCode.LeftArrow))
-            {
-                // Debug.Log("Left Arrow pressed");
-                ApplyRotation(rotationThrust);
-
-                if(!leftThrusterParticles.isPlaying)
-                {
-                    leftThrusterParticles.Play();
-                }
-            }
-            else if (Input.GetKey(KeyCode.RightArrow))
-            {
-                // Debug.Log("Right Arrow pressed");
-                ApplyRotation(- rotationThrust);
-
-                if(!rightThrusterParticles.isPlaying)
-                {
-                    rightThrusterParticles.Play();
-                }
-            }
-            else{
-                rightThrusterParticles.Stop();
-                leftThrusterParticles.Stop();
-            }
-
-            void ApplyRotation(float rotationFrame)
-            {
-                // Freezing rotation -> can manually rotate
-                rb.freezeRotation = true;
-
-                transform.Rotate(Vector3.forward * rotationFrame * Time.deltaTime);
-
-                // unfreeze rotation -> the physics system can take over
-                rb.freezeRotation = false;
-            }
-
+            stopThrusting();
         }
+    }
+
+
+    void startThrusting()
+    {
+         // Debug.Log("Space pressed");
+        rb.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
+        if(!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(mainEngine);
+        }
+        if(!mainEngineParticles.isPlaying)
+        {
+            mainEngineParticles.Play();
+        }
+    }
+
+    void stopThrusting()
+    {
+        audioSource.Stop();
+        mainEngineParticles.Stop();
+    }
+
+    void ProcessRotation()
+    {
+        // Debug.Log("Left Arrow pressed");
+        ApplyRotation(rotationThrust);
+        if(!leftThrusterParticles.isPlaying)
+        {
+            RotateLeft();
+        }
+        else if (Input.GetKey(KeyCode.RightArrow))
+        {
+            RotateRight();
+        }
+        else{
+            StopRotating();
+        }
+    }
+
+    void RotateLeft()
+    {
+        // Debug.Log("Left Arrow pressed");
+        ApplyRotation(rotationThrust);
+
+        if(!leftThrusterParticles.isPlaying)
+        {
+            leftThrusterParticles.Play();
+        }
+    }
+
+    void RotateRight()
+    {
+        // Debug.Log("Right Arrow pressed");
+        ApplyRotation(- rotationThrust);
+
+        if(!rightThrusterParticles.isPlaying)
+        {
+            rightThrusterParticles.Play();
+        }
+    }
+
+    void StopRotating()
+    {
+        leftThrusterParticles.Stop();
+        rightThrusterParticles.Stop();
+
+    }
+
+    void ApplyRotation(float rotationFrame)
+    {
+        // Freezing rotation -> can manually rotate
+        rb.freezeRotation = true;
+
+        transform.Rotate(Vector3.forward * rotationFrame * Time.deltaTime);
+
+        // unfreeze rotation -> the physics system can take over
+        rb.freezeRotation = false;
+    }
+
 }
