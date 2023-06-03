@@ -13,20 +13,40 @@ public class CollisionHandler : MonoBehaviour
     [SerializeField] ParticleSystem successParticles;
     [SerializeField] ParticleSystem explodedParticles;
 
-
-
     AudioSource audioSource;
 
     bool isTransitioning = false;
+    bool collisionAbled = false;
 
     void Start()
     {
         audioSource =GetComponent<AudioSource>();
     }
 
+    void Update()
+    {
+        RespondToDebugKeys();
+
+    }
+
+    void RespondToDebugKeys()
+    {
+        // Debug Key "L to next level"
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            LoadNextLevel();
+        }
+
+        // Debug Key "C to NO COLLISION"
+        else if (Input.GetKeyDown(KeyCode.C))
+        {
+            collisionAbled = !collisionAbled;
+        }
+    }
+
     void OnCollisionEnter(Collision other)
     {
-        if (isTransitioning){ return; }
+        if (isTransitioning || collisionAbled){ return; }
 
         switch (other.gameObject.tag)
         {
@@ -68,7 +88,6 @@ public class CollisionHandler : MonoBehaviour
         audioSource.PlayOneShot(success);
 
         successParticles.Play();
-
 
         GetComponent<Movement>().enabled = false;
         Invoke("LoadNextLevel", timeOfDelay);
